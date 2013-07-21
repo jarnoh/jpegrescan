@@ -13,33 +13,74 @@ logger:debug('exportfilter')
 
 local prefs = import 'LrPrefs'.prefsForPlugin() 
 
-local jpegrescan = {}
+local jpegrescan = { allowFileFormats = { 'JPEG' } }
+
+
+function jpegrescan.exportPresetFields()
+	return
+	{
+		{ key = 'jpegrescan_strip', default = false },
+		{ key = 'jpegrescan_threads', default = true },
+	}
+end
+
+
 
 function jpegrescan.sectionForFilterInDialog( viewFactory, propertyTable )
-
-	return {
-		title = Info.LrPluginName
+	return 
+	{
+		title = Info.LrPluginName,
+		viewFactory:column
+		{
+			spacing = viewFactory:control_spacing(),
+			viewFactory:checkbox 
+			{
+				title = 'Strip all metadata for minimum size',
+				value = LrView.bind('jpegrescan_strip'),
+				checked_value = true,
+				unchecked_value = false
+			},
+			viewFactory:checkbox 
+			{
+				title = 'Run on multiple threads',
+				value = LrView.bind('jpegrescan_threads'),
+				checked_value = true,
+				unchecked_value = false
+			}
+									
+		}
 	}
 end
 
 -------------------------------------------------------------------------------
 
 function jpegrescan.postProcessRenderedPhotos( functionContext, filterContext )
-logger:debug('postProcessRenderedPhotos')
+	logger:debug('postProcessRenderedPhotos')
+
+	local optionstrip=""
+	local optionthreads=""
+	if filterContext.propertyTable.jpegrescan_strip then
+		optionstrip="-s"
+	end
+	if filterContext.propertyTable.jpegrescan_threads then
+		optionthreads="-t"
+	end
+	
 	for sourceRendition, renditionToSatisfy in filterContext:renditions() do
 		local success, _ = sourceRendition:waitForRender()
 		
 		local inpath = sourceRendition.destinationPath
 		local outpath = sourceRendition.destinationPath.."_jpegrescantmp.jpg"
-		logger:debug(path)
+		-- logger:debug("path",inpath,outpath)
 		
-		if success and not sourceRendition.wasSkipped then
+		-- process only successfully rendered jpegs
+		if success and not sourceRendition.wasSkipped and filterContext.propertyTable.LR_format == "JPEG" then
 			local cmd = ""		
 			
 			if WIN_ENV then
-				cmd = 'jpegrescan -t "'..inpath..'" "'..outpath..'"'
+				cmd = 'jpegrescan '..optionthreads..' '..optionstrip..' "'..inpath..'" "'..outpath..'"'
 			else
-				cmd = 'PATH="'.._PLUGIN.path..'" jpegrescan -t "'..inpath..'" "'..outpath..'"'
+				cmd = 'PATH="'.._PLUGIN.path..'" jpegrescan '..optionthreads..' '..optionstrip..' "'..inpath..'" "'..outpath..'"'
 			end
 			
 			local t0 = LrDate.currentTime()
@@ -52,14 +93,14 @@ logger:debug('postProcessRenderedPhotos')
 			
 			local insize = LrFileUtils.fileAttributes(inpath).fileSize
 			local outsize = LrFileUtils.fileAttributes(outpath).fileSize
-			logger:debug(insize,outsize)
+			-- logger:debug(insize,outsize)
 			
 			if outsize>0 then
 				local ret, err = LrFileUtils.delete(inpath)
-				logger:debug("delete",ret,err,"")
+				-- logger:debug("delete",ret,err,"")
 				
 				ret, err = LrFileUtils.move(outpath, inpath)
-				logger:debug("move",ret,err,"")
+				-- logger:debug("move",ret,err,"")
 				if not ret then
 					logger:debug("could not move output")
 					renditionToSatisfy:renditionIsDone(false, "jpegrescan failed")
