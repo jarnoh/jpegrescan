@@ -27,11 +27,7 @@ return
 					spacing = f:control_spacing(),
 					f:static_text 
 					{
-						title = "Export filter for losslessly saving few bytes for JPEG exports.  "..
-						"\n\nCredits\n\n"..
-						"jpegtran by Independent JPEG Group\n"..
-						"jpegrescan script by Loren Merritt\n"..
-						"Lightroom plugin by Jarno Heikkinen",
+						title = "Export filter for losslessly saving few bytes for JPEG exports.",
 					},
 				},
 				f:row
@@ -45,7 +41,20 @@ return
 							prefs.totalSeconds or 0),
 					},
 				},
-			}
+			},
+			{
+				title = "Credits",
+				f:row
+				{
+					f:static_text 
+					{
+						title=
+						"Lightroom plugin by Jarno Heikkinen\n"..
+						"jpegrescan script by Loren Merritt\n"..
+						"jpegtran by Independent JPEG Group"
+					},
+				},
+			},
 		}
 	end
 }
