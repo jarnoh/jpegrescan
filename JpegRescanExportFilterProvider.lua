@@ -16,13 +16,11 @@ local prefs = import 'LrPrefs'.prefsForPlugin()
 local jpegrescan = { allowFileFormats = { 'JPEG' } }
 
 
-function jpegrescan.exportPresetFields()
-	return
+jpegrescan.exportPresetFields = 
 	{
 		{ key = 'jpegrescan_strip', default = false },
 		{ key = 'jpegrescan_threads', default = true },
 	}
-end
 
 
 
