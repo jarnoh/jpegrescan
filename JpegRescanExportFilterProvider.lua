@@ -76,7 +76,7 @@ function jpegrescan.postProcessRenderedPhotos( functionContext, filterContext )
 			local cmd = ""		
 			
 			if WIN_ENV then
-				cmd = 'jpegrescan '..optionthreads..' '..optionstrip..' "'..inpath..'" "'..outpath..'"'
+				cmd = 'cd /d "'.._PLUGIN.path..'" & jpegrescan '..optionthreads..' '..optionstrip..' "'..inpath..'" "'..outpath..'"'
 			else
 				cmd = 'PATH="'.._PLUGIN.path..'" jpegrescan '..optionthreads..' '..optionstrip..' "'..inpath..'" "'..outpath..'"'
 			end
