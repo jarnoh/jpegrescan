@@ -20,3 +20,12 @@ ICC profiles and such.
 
 You can also see some byte statistics in the plugin manager.
 
+
+jpegtran
+--------
+Mac OSX binary of jpegtran was compiled from
+[jpegsrc.v9.tar.gz](http://www.ijg.org/files/jpegsrc.v9.tar.gz) with commands:
+
+    ./configure -disable-shared CFLAGS="-Os -arch i386 -arch x86_64 -mmacosx-version-min=10.5" LDFLAGS="-arch i386 -arch x86_64 -mmacosx-version-min=10.5" --disable-dependency-tracking
+    make jpegtran
+    strip jpegtran
