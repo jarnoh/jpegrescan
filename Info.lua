@@ -1,4 +1,7 @@
 return {
+--
+-- Plugin project is at https://github.com/jarnoh/lrjpegrescan
+--
 	LrSdkVersion = 3.0,
 	LrSdkMinimumVersion = 3.0,
 
@@ -14,6 +17,6 @@ return {
 		file = 'JpegRescanExportFilterProvider.lua',
 	},
 
-	VERSION = { major=0, minor=1, revision=1 },
+	VERSION = { major=0, minor=1, revision=845 },
 
 }
