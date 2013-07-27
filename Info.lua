@@ -17,6 +17,6 @@ return {
 		file = 'JpegRescanExportFilterProvider.lua',
 	},
 
-	VERSION = { major=0, minor=1, revision=845 },
+	VERSION = { major=0, minor=1, revision=846 },
 
 }

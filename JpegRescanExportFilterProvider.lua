@@ -1,4 +1,5 @@
 local LrView = import 'LrView'
+local LrDialogs = import 'LrDialogs'
 local LrLogger = import 'LrLogger'
 local bind = LrView.bind
 local LrPathUtils = import 'LrPathUtils'
@@ -64,6 +65,9 @@ function jpegrescan.postProcessRenderedPhotos( functionContext, filterContext )
 		optionthreads="-t"
 	end
 	
+	
+	local sessionTotal = 0
+	local sessionTime = 0
 	for sourceRendition, renditionToSatisfy in filterContext:renditions() do
 		local success, _ = sourceRendition:waitForRender()
 		
@@ -109,10 +113,19 @@ function jpegrescan.postProcessRenderedPhotos( functionContext, filterContext )
 				prefs.totalBytes=(prefs.totalBytes or 0)+insize
 				prefs.totalResultBytes=(prefs.totalResultBytes or 0)+outsize
 				prefs.totalSeconds=(prefs.totalSeconds or 0)+(t1-t0)
+				
+				sessionTotal = sessionTotal + (insize-outsize)
+				sessionTime = sessionTime + (t1-t0)
 			end
 		
 		end
 	end
+
+	-- LR5 only	
+	if LrDialogs.showBezel then
+		LrDialogs.showBezel(string.format(Info.LrPluginName..": Saved %d bytes, wasted %d seconds", sessionTotal, sessionTime), 5)
+	end
+	
 end
 
 return jpegrescan
