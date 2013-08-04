@@ -16,6 +16,18 @@ local Info = require 'Info'
 logger:enable( "print" ) 
 logger:trace("Provider init")
 
+
+function stats(fmt)
+	local total = (prefs.totalBytes or 0)+(prefs.fastTotalBytes or 0)
+	local totalResult = (prefs.totalResultBytes or 0)+(prefs.fastTotalResultBytes or 0)
+	return string.format(fmt, 
+		(prefs.totalPhotos or 0)+(prefs.fastTotalPhotos or 0), 
+		total - totalResult, 
+		(total - totalResult+1)*100/(total+1), 
+		(prefs.totalSeconds or 0)+(prefs.fastTotalSeconds or 0))
+end
+
+
 return 
 {
 	sectionsForTopOfDialog = function(f, p)
@@ -34,11 +46,7 @@ return
 				{
 					f:static_text 
 					{
-						title=string.format("This plugin has processed %d photos, saved %d bytes (%d%%) and wasted %d seconds", 
-							prefs.totalPhotos or 0, 
-							(prefs.totalBytes or 0) - (prefs.totalResultBytes or 0), 
-							((prefs.totalBytes or 0) - (prefs.totalResultBytes or 0))*100/(prefs.totalBytes or 1), 
-							prefs.totalSeconds or 0),
+						title=stats("This plugin has processed %d photos, saved %d bytes (%d%%) and wasted %d seconds")
 					},
 				},
 			},
