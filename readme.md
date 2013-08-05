@@ -11,8 +11,13 @@ Introduction
 This is a simple Lightroom export plugin, which attempts to reduce JPEG files
 by using different lossless compression parameters on the exported file.
 
-Currently, only Mac OS X is supported; I don't have a working Windows environment 
-available for development or testing (jpegrescan requires Perl and jpegtran) 
+There are two modes of operation; fast mode which uses static scans file; and
+a brute-force method using jpegrescan script.  jpegrescan is always smallest,
+but it can take several seconds per image.
+
+Currently, only Mac OS X is supported with jpegrescan; I don't have a working 
+Windows environment  available for development or testing (jpegrescan requires 
+Perl and jpegtran).
 
 Simply install the plugin and add the export filter in the Lightroom's export dialog.
 In the export settings, you can also optionally set removal of _ALL_ metadata, including
